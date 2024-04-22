@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX</title>
+</head>
+<body>
+<main class="d-flex  row-cols-md-1 flex-nowrap">
+    <!--        <div th:replace="headmenu :: menu"> </div>-->
+    <div class="col" style="width: 30px"></div>
+    <div class="row justify-content-md-center col-md-10">
+        <div id="userMainContent" class="col-md-8 d-none">
+            <h3 class="pb-4 mb-4  border-bottom">
+                User info
+            </h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">SecondName</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Role</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr >
+                    <th sec:authentication="principal.id" scope="row">1</th>
+                    <td sec:authentication="principal.name" >Name</td>
+                    <td sec:authentication="principal.secondName">SecondName</td>
+                    <td sec:authentication="principal.age" >AGE</td>
+                    <td sec:authentication="principal.authorities">no Roles</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="adminMainContent" class="col-md-8">
+            <h3 class="pb-4 mb-4  border-bottom">
+                Admin panel
+            </h3>
+
+            <ul class="nav nav-tabs" id="adminPageTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="home-tab" data-toggle="tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Users table</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <!----------------------------------- New User -------------------------------->
+
+                    <button class="nav-link" id="profile-tab" data-toggle="tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">New user</button>
+                    <!------------------------------------ New User -------------------------------->
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">id</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">SecondName</th>
+                            <th scope="col">Age</th>
+                            <th scope="col">E-Mail</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Edit</th>
+                            <th scope="col">Remove</th>
+                        </tr>
+                        </thead>
+                        <tbody id="adminPageTable">
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                    <form  id="addnewuser" >
+                        <div class="container col-5">
+                            <div class="mb-3">
+                                <label for="usrname" class="form-label">Name</label>
+                                <input type="text"  id="usrname" class="form-control"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="usrname" class="form-label">SecondName</label>
+                                <input type="text"  id="usrsecname" class="form-control"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="usrage" class="form-label">Age</label>
+                                <input type="number" id="usrage" class="form-control"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="usrmail" class="form-label">Email address</label>
+                                <input type="text"  id="usrmail" class="form-control"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="usrpass" class="form-label">Password</label>
+                                <input type="password"  id="usrpass" class="form-control"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="usrroles" class="form-label">Role</label>
+                                <!--                                    <input type="text" th:field="*{Roles}" id="usrroles" class="form-control"/>-->
+                                <select   id="usrroles" class="form-select" multiple aria-label="multiple select example">
+                                    <option value="2" selected>admin</option>
+                                    <option value="1">user</option>
+                                </select></div ><button type="button" onclick="addNewUser('#addnewuser')" class="btn btn-primary">Create User</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    </div>
+
+
+</main>
+<script src="/actions.js"></script>
+</body>
+</html>
