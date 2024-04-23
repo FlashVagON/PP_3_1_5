@@ -4,6 +4,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Set;
@@ -17,17 +19,22 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "name")
+    @Pattern(regexp = "[A-Za-zа-яёА-ЯЁ]{2,15}", message = "Name should be between 2 and 15 characters without space")
     private String name;
 
     @Column(name = "surname")
+    @Pattern(regexp = "[A-Za-zа-яёА-ЯЁ]{2,15}", message = "Surname should be between 2 and 15 characters without space")
     private String surname;
 
     @Column(name = "age")
     private int age;
-    @Size(min=2, message = "Не меньше 5 знаков")
+
+    @NotEmpty(message = "Password cannot be empty")
+    @Size(min = 4, message = "Password should be greater then 4 symbols")
     @Column(name = "password")
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
+    @NotEmpty(message = "The role cannot be omitted")
     private Set<Role> roles;
 
     public User(String name, String surname, int age, String password) {

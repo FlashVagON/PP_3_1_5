@@ -21,9 +21,8 @@ async function getAdminPage() {
 
                         <th scope="row">${user.id}</th>
                         <td >${user.name}</td>
-                        <td >${user.secondName}</td>
-                        <td >${user.age}</td>
-                        <td >${user.email}</td>
+                        <td >${user.surname}</td>
+                        <td >${user.age}</td>                      
                         <td >${user.roles.map(role => role.roleName)}</td>
                         
                         <td >
@@ -35,19 +34,16 @@ async function getAdminPage() {
                                             <h5 class="modal-title" id="ModalLabel">Edit User</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <form >
+                                        <form>
                                             <div class="modal-body">
                                                 <div class="mb-3">
                                                     <input style="display:none" id="usrid" name="id" value="${user.id}"  >
                                                     <label for="usrname" class="form-label">Name</label>
                                                     <input name="name" value="${user.name}" id="usrname" class="form-control"  ></div >
-                                                 <div class="mb-3">   <label for="usrsecname" class="form-label">Secondname</label>
-                                                    <input name="Secondname" value="${user.secondName}" id="usrsecname" class="form-control" ></div >
-                                                    <div class="mb-3">    <label for="usrmail" class="form-label">Email address</label>
-                                                    <input name="email" value="${user.email}" id="usrmail" class="form-control"></div >
+                                                 <div class="mb-3">   <label for="usrsurname" class="form-label">Secondname</label>
+                                                    <input name="surname" value="${user.surname}" id="usrsurname" class="form-control" ></div >                                                 
                                                     <div class="mb-3">   <label for="usrage" class="form-label">Age</label>
-                                                    <input type="number" value="${user.age}" name="age" id="usrage" class="form-control" ></div >
-                                               
+                                                    <input type="number" value="${user.age}" name="age" id="usrage" class="form-control" ></div >                                               
                                                 <div class="mb-3">   <label for="usrpass" class="form-label">Password</label>
                                                     <input name="age" value="${user.password}" id="usrpass" class="form-control" type="password" ></div >
                                                 <div class="mb-3">   <label for="usrroles" class="form-label">Roles</label>
@@ -74,19 +70,16 @@ async function getAdminPage() {
                                             <h5 class="modal-title" id="ModalLabel">Edit User</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <form  >
+                                        <form>
                                             <div class="modal-body">
                                                 <div class="mb-3">
                                                     <input style="display:none" name="id" value="${user.id}">
                                                     <label for="usrname" class="form-label">Name</label>
                                                     <input disabled name="name" value="${user.name}" id="usrname" class="form-control" ></div >
-                                                 <div class="mb-3">   <label for="usrsecname" class="form-label">Secondname</label>
-                                                    <input disabled name="age" value="${user.secondName}" id="usrsecname" class="form-control" /></div >
-                                                    <div class="mb-3">    <label for="usrmail" class="form-label">Email address</label>
-                                                    <input disabled name="email" value="${user.email}" id="usrmail" class="form-control"/></div >
+                                                <div class="mb-3">   <label for="usrsurname" class="form-label">Secondname</label>
+                                                    <input disabled name="age" value="${user.surname}" id="usrsurname" class="form-control" /></div >                                               
                                                     <div class="mb-3">   <label for="usrage" class="form-label">Age</label>
-                                                    <input type="number" disabled name="age" value="${user.age}" id="usrage" class="form-control" /></div >
-                                               
+                                                    <input type="number" disabled name="age" value="${user.age}" id="usrage" class="form-control" /></div>                                               
                                                 <div class="mb-3">   <label for="usrpass" class="form-label">Password</label>
                                                     <input disabled name="age" value="${user.password}" id="usrpass" class="form-control" type="password" /></div >
                                                 <div class="mb-3">   <label for="usrroles" class="form-label">Roles</label>
@@ -96,13 +89,13 @@ async function getAdminPage() {
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="button" data-bs-dismiss="modal" onclick="deleteUser(${user.id})" class="btn btn-primary btn-danger">delete User</button>
+                                                <button type="button" data-bs-dismiss="modal" onclick="deleteUser(${user.id})" class="btn btn-primary btn-danger">Delete User</button>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
                             </div>
-                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target='#deleteUserModal${user.id}' >delete User</button>
+                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target='#deleteUserModal${user.id}' >Delete User</button>
                         </td>
                     </tr>
             `
@@ -119,9 +112,8 @@ async function addNewUser(formIdSelector) {
 
         let addUserForm = $(formIdSelector)
         let firstName = addUserForm.find('#usrname').val().trim();
-        let lastName = addUserForm.find('#usrsecname').val().trim();
+        let lastName = addUserForm.find('#usrsurname').val().trim();
         let age = addUserForm.find('#usrage').val().trim();
-        let email = addUserForm.find('#usrmail').val().trim();
         let password = addUserForm.find('#usrpass').val().trim();
         let rolesArray = addUserForm.find('#usrroles').val()
         let roles = []
@@ -136,8 +128,7 @@ async function addNewUser(formIdSelector) {
 
         const data = {
             name: firstName,
-            secondName: lastName,
-            email: email,
+            surname: lastName,
             age: age,
             password: password,
             roles: roles
@@ -184,9 +175,8 @@ async function updateUser(formIdSelector) {
     let addUserForm = $(formIdSelector)
     let id = addUserForm.find('#usrid').val().trim();
     let firstName = addUserForm.find('#usrname').val().trim();
-    let lastName = addUserForm.find('#usrsecname').val().trim();
+    let lastName = addUserForm.find('#usrsurname').val().trim();
     let age = addUserForm.find('#usrage').val().trim();
-    let email = addUserForm.find('#usrmail').val().trim();
     let password = addUserForm.find('#usrpass').val().trim();
     let rolesArray = addUserForm.find('#usrroles').val()
     let roles = []
@@ -202,8 +192,7 @@ async function updateUser(formIdSelector) {
     let data = {
         id: id,
         name: firstName,
-        secondName: lastName,
-        email: email,
+        surname: lastName,
         age: age,
         password: password,
         roles: roles
