@@ -40,7 +40,7 @@ public class MainRestController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PostMapping("/deleteuser")
+    @DeleteMapping("/deleteuser")
     public ResponseEntity<String> deleteUser(@RequestBody Long id) {
         userService.deleteUser(id);
         return new ResponseEntity<>("User deleted", HttpStatus.OK);

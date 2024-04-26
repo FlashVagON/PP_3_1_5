@@ -1,6 +1,7 @@
 $(async function () {
     await getAdminPage()
 })
+showUserPage()
 const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
 var rolesList ;
 fetch("api/rolelist").then(res => res.json()).then(res => rolesList = res);
@@ -9,7 +10,7 @@ async function getAdminPage() {
     document.querySelector('#adminPageLink').removeAttribute('href')
     document.querySelector('#userPageLink').removeAttribute('href')
 
-    const usersList = document.querySelector('#adminPageTable')
+    const usersList = document.querySelector('#adminPageTable tbody')
     let result = ''
     console.log("ВЫВОД ОСНОВНОЙ ТАБЛИЦЫ ЮЗЕРОВ")
     await  fetch('api/userlist')
@@ -23,7 +24,7 @@ async function getAdminPage() {
                         <td >${user.name}</td>
                         <td >${user.surname}</td>
                         <td >${user.age}</td>                      
-                        <td >${user.roles.map(role => role.roleName)}</td>
+                        <td >${roleToString(user.roles)}</td>
                         
                         <td >
                             <!---------------------------------------- Modal For Update ------------------------------->
@@ -48,18 +49,19 @@ async function getAdminPage() {
                                                     <input name="age" value="${user.password}" id="usrpass" class="form-control" type="password" ></div >
                                                 <div class="mb-3">   <label for="usrroles" class="form-label">Roles</label>
                                                     <select class="form-select" id="usrroles" multiple aria-label="multiple select example">
-                                                     
+                                                        
                                                     </select></div >
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="button" data-bs-dismiss="modal" onclick="updateUser('#updateUserModal${user.id}')" class="btn btn-primary">Update User</button>
+                                                <button type="button" data-bs-dismiss="modal" onclick="updateUser('#updateUserModal${user.id}')" 
+                                                class="btn btn-primary">Update User</button>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
                             </div>
-                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target='#updateUserModal${user.id}'>edit User</button>
+                            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target='#updateUserModal${user.id}'>Edit User</button>
                         </td>
                         <td >
                             <!---------------------------------------- Modal For delete ------------------------------->
@@ -89,13 +91,14 @@ async function getAdminPage() {
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="button" data-bs-dismiss="modal" onclick="deleteUser(${user.id})" class="btn btn-primary btn-danger">Delete User</button>
+                                                <button type="button" data-bs-dismiss="modal" onclick="deleteUser(${user.id})" 
+                                                class="btn btn-primary btn-danger">Delete User</button>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
                             </div>
-                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target='#deleteUserModal${user.id}' >Delete User</button>
+                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target='#deleteUserModal${user.id}'>Delete User</button>
                         </td>
                     </tr>
             `
@@ -103,7 +106,7 @@ async function getAdminPage() {
     usersList.innerHTML = result;
     $('select').empty()
     rolesList.forEach(role => {
-        $('select').append($('<option>').val(role.id).text(role.roleName));
+        $('select').append($('<option>').val(role.id).text(role.name.substring(5)));
     })
     let triggerFirstTabEl = document.querySelector('#home-tab')
     new bootstrap.Tab(triggerFirstTabEl).show()
@@ -111,11 +114,11 @@ async function getAdminPage() {
 async function addNewUser(formIdSelector) {
 
         let addUserForm = $(formIdSelector)
-        let firstName = addUserForm.find('#usrname').val().trim();
-        let lastName = addUserForm.find('#usrsurname').val().trim();
-        let age = addUserForm.find('#usrage').val().trim();
-        let password = addUserForm.find('#usrpass').val().trim();
-        let rolesArray = addUserForm.find('#usrroles').val()
+        let firstName = addUserForm.find('#name').val().trim();
+        let lastName = addUserForm.find('#surname').val().trim();
+        let age = addUserForm.find('#age').val().trim();
+        let password = addUserForm.find('#password').val().trim();
+        let rolesArray = addUserForm.find('#userroles').val()
         let roles = []
 
         for (let r of rolesList) {
@@ -154,7 +157,7 @@ async function deleteUser(id){
     let data = {
         id: id
     }
-    fetch('/api/deleteUser', {
+    fetch('/api/deleteuser', {
         credentials: 'include',
         method: 'delete',
         mode: 'cors',
@@ -196,9 +199,10 @@ async function updateUser(formIdSelector) {
         age: age,
         password: password,
         roles: roles
+
     }
 
-    fetch('/api/editUser', {
+    fetch('/api/edituser', {
         credentials: 'include',
         method: 'PUT',
         mode: 'cors',
@@ -209,18 +213,39 @@ async function updateUser(formIdSelector) {
         },
         body: JSON.stringify(data)
     })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Error occurred!')
+            }
+            return response.json()
+        })
         .then(console.log)
         .then(x=>  getAdminPage());
 }
 
+function roleToString(userRoles) {
+    let htmlString = ''
+    for (let i = 0; i < userRoles.length; i++) {
+        let arr = userRoles[i].name.split('_');
+        if (i > 0) {
+            htmlString += " " + arr[1]
+        } else {
+            htmlString += arr[1]
+        }
+    }
+    return htmlString
+}
+
 async function showUserPage(){
     document.querySelector('#adminPageLink').classList.remove('active')
+    document.querySelector('#adminPageTabs').classList.add('d-none')
     document.querySelector('#userPageLink').classList.add('active')
     document.querySelector('#adminMainContent').classList.add('d-none')
     document.querySelector('#userMainContent').classList.remove('d-none')
 }
 async function showAdminPage(){
     document.querySelector('#adminPageLink').classList.add('active')
+    document.querySelector('#adminPageTabs').classList.remove('d-none')
     document.querySelector('#userPageLink').classList.remove('active')
     document.querySelector('#userMainContent').classList.add('d-none')
     document.querySelector('#adminMainContent').classList.remove('d-none')

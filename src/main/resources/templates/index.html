@@ -12,6 +12,16 @@
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+            crossorigin="anonymous"></script>
+
+    <script type="text/javascript" th:src="@{js/actions.js}" src="../static/js/actions.js"></script>
+
 
     <title>Users</title>
 </head>
@@ -25,10 +35,13 @@
     <div class="col-md-2 m-0 p-0">
         <ul class="nav nav-pills flex-column">
                 <li class="nav-item" >
-                    <a  th:classappend="${isAdmin} ? '' : active" id="userPageLink" onclick="showUserPage()" class="nav-link" href="/user">User</a>
+                    <a  id="userPageLink" onclick="showUserPage()"
+                        class="nav-link" href="/user">User</a>
                 </li>
                 <li class="nav-item">
-                    <a sec:authorize="hasRole('ROLE_ADMIN')" id="adminPageLink" onclick="showAdminPage()" th:classappend="${isAdmin} ? active :''" class="nav-link  active" href="/admin">Admin</a>
+                    <a sec:authorize="hasRole('ROLE_ADMIN')" id="adminPageLink"
+                       onclick="showAdminPage()" th:classappend="${isAdmin} ? active :''"
+                       class="nav-link  active" href="/admin">Admin</a>
                 </li>
         </ul>
     </div>
@@ -36,10 +49,10 @@
         <h3 class="pb-4 mb-4  border-bottom">
             User info
         </h3>
-        <table class="table">
-            <thead>
+        <table class="table table-light table-hover table-striped table-sm caption-top">
+            <thead class="table-dark">
             <tr>
-                <th scope="col">id</th>
+                <th scope="col">ID</th>
                 <th scope="col">Name</th>
                 <th scope="col">Surname</th>
                 <th scope="col">Age</th>
@@ -74,30 +87,29 @@
         </ul>
 
 
-        <div class="tab-content" id="myTabContent"> <!-- Таблица пользователей -->
-            <div sec:authorize="hasAnyRole('ROLE_ADMIN')"
+        <div id="adminMainContent" class="tab-content" > <!-- Таблица пользователей -->
+            <div sec:authorize="hasRole('ROLE_ADMIN')"
                  class="tab-pane fade show active" id="home-tab-pane" role="tabpanel"
                  aria-labelledby="home-tab" tabindex="0">
                 <div class="container-fluid">
                     <div class="row">
-                        <div id="adminMainContent" class="col-md-8">
+                        <div  class="col-md-8">
                             <div class="jumbotron">
-                                <table class="table table-light table-hover table-striped table-sm caption-top">
+                                <table id="adminPageTable" class="table table-light table-hover table-striped table-sm caption-top">
                                     <caption>Список пользователей</caption>
                                     <thead class="table-dark">
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Surname</th>
-                                        <th>Age</th>
-                                        <th>Role</th>
-                                        <th>Edit user</th>
-                                        <th>Delete user</th>
-                                    </tr>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Surname</th>
+                                            <th>Age</th>
+                                            <th>Role</th>
+                                            <th>Edit user</th>
+                                            <th>Delete user</th>
+                                        </tr>
                                     </thead>
-                                    <tboby id="adminPageTable">
-
-                                    </tboby>
+                                    <tbody>
+                                    </tbody>
                                 </table>
                                 <br>
                                 <div>
@@ -137,8 +149,8 @@
                     <div class="mb-3">
                         <label for="userroles" class="form-label">Role</label>
                         <select  name="roles" id="userroles" class="form-select" multiple aria-label="multiple select example">
-                            <option value="2" selected>admin</option>
-                            <option value="1">user</option>
+                            <option value="2" >admin</option>
+                            <option value="1" selected>user</option>
                         </select>
                     </div >
 
@@ -148,6 +160,5 @@
         </div>
     </div>
 </div>
-<script src="/actions.js"></script>
 </body>
 </html>
