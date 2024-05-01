@@ -1,19 +1,81 @@
 $(async function () {
-    await getAdminPage()
-})
-showUserPage()
-const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
-var rolesList ;
-fetch("api/rolelist").then(res => res.json()).then(res => rolesList = res);
 
+    await infoUser()
+
+})
+let isUser = true
+const userFetch = {
+    head: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Referer': null
+    },
+    findUserByName: async () => await fetch(`api/user`)
+}
+
+const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
+let rolesList ;
+async function infoUser() {
+    let infoString = '';
+    const info = document.querySelector('#info');
+    await userFetch.findUserByName()
+        .then(res => res.json())
+        .then(user => {
+            infoString += `
+             <span>
+               with roles <span>${roleToString(user.roles)}</span>
+                </div>
+            </span>
+                </tr>
+            `;
+        });
+    info.innerHTML = infoString;
+    let tblString = '';
+    const table = document.querySelector('#userTableContent');
+    await userFetch.findUserByName()
+        .then(res => res.json())
+        .then(user => {
+            tblString = `
+                <tr>
+                    <td>${user.id}</td>                   
+                    <td>${user.name}</td>
+                    <td>${user.surname}</td>
+                    <td>${user.age}</td>
+                    <td>${roleToString(user.roles)}</td>
+                </tr>
+            `;
+            table.innerHTML = tblString;
+
+            $(function (){
+                let role = ""
+                for (let i = 0; i < user.roles.length; i++) {
+                    role = user.roles[i].name
+                    if (role == "ROLE_ADMIN") {
+                        isUser = false;
+                        getAdminPage()
+                    }
+                }
+                if (isUser) {
+                    document.querySelector('#userPageLink').classList.add('active')
+                    document.querySelector('#adminMainContent').classList.add('d-none')
+                    document.querySelector('#userMainContent').classList.remove('d-none')
+                } else {
+                    showAdminPage()
+
+                }
+            })
+        })
+}
+
+fetch("api/roleList").then(res => res.json()).then(res => rolesList = res);
 async function getAdminPage() {
-    document.querySelector('#adminPageLink').removeAttribute('href')
-    document.querySelector('#userPageLink').removeAttribute('href')
+    // document.querySelector('#adminPageLink').removeAttribute('href')
+    // document.querySelector('#userPageLink').removeAttribute('href')
 
     const usersList = document.querySelector('#adminPageTable tbody')
     let result = ''
     console.log("ВЫВОД ОСНОВНОЙ ТАБЛИЦЫ ЮЗЕРОВ")
-    await  fetch('api/userlist')
+    await  fetch('api/userList')
         .then(res => res.json())
         .then(users => users.forEach(user => {
             console.log(user)
@@ -157,7 +219,7 @@ async function deleteUser(id){
     let data = {
         id: id
     }
-    fetch('/api/deleteuser', {
+    fetch('/api/deleteUser', {
         credentials: 'include',
         method: 'delete',
         mode: 'cors',
@@ -202,7 +264,7 @@ async function updateUser(formIdSelector) {
 
     }
 
-    fetch('/api/edituser', {
+    fetch('/api/editUser', {
         credentials: 'include',
         method: 'PUT',
         mode: 'cors',
@@ -236,14 +298,15 @@ function roleToString(userRoles) {
     return htmlString
 }
 
-async function showUserPage(){
+async function showUserPage() {
     document.querySelector('#adminPageLink').classList.remove('active')
     document.querySelector('#adminPageTabs').classList.add('d-none')
     document.querySelector('#userPageLink').classList.add('active')
     document.querySelector('#adminMainContent').classList.add('d-none')
     document.querySelector('#userMainContent').classList.remove('d-none')
 }
-async function showAdminPage(){
+
+async function showAdminPage() {
     document.querySelector('#adminPageLink').classList.add('active')
     document.querySelector('#adminPageTabs').classList.remove('d-none')
     document.querySelector('#userPageLink').classList.remove('active')

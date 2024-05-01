@@ -30,7 +30,7 @@ public class User implements UserDetails {
     private int age;
 
     @NotEmpty(message = "Password cannot be empty")
-    @Size(min = 4, message = "Password should be greater then 4 symbols")
+    @Size(min = 3, message = "Password should be greater then 3 symbols")
     @Column(name = "password")
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)

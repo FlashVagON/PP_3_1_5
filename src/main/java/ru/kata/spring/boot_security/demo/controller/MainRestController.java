@@ -6,9 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -18,31 +21,40 @@ public class MainRestController {
 
     final UserService userService;
     final RoleService roleService;
+    final UserRepository userRepository;
 
 
-    @GetMapping("/userlist")
+    @GetMapping("/userList")
     public List<User> getUsersList(){
         return userService.listUsers();
     }
-    @GetMapping("/rolelist")
+    @GetMapping("/roleList")
     public List<Role> getRolesList(){
         return roleService.getAllRoles();
     }
-    @PostMapping("/adduser")
-    public ResponseEntity<User> addUser(@RequestBody User user) {
+    @PostMapping("/addUser")
+    public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
         userService.addUser(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PutMapping("/edituser")
-    public ResponseEntity<User> editUser(@RequestBody User user) {
+    @PutMapping("/editUser")
+    public ResponseEntity<User> editUser(@Valid @RequestBody User user) {
         userService.updateUser(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @DeleteMapping("/deleteuser")
-    public ResponseEntity<String> deleteUser(@RequestBody Long id) {
-        userService.deleteUser(id);
+    @DeleteMapping("/deleteUser")
+    public ResponseEntity<String> deleteUser(@RequestBody User user) {
+        userService.deleteUser(user);
         return new ResponseEntity<>("User deleted", HttpStatus.OK);
     }
+
+    @GetMapping("/user")
+    public ResponseEntity<User> getUserByUsername (Principal principal) {
+        User user = userRepository.findByName(principal.getName());
+        return new ResponseEntity<>(user,HttpStatus.OK);
+    }
+
+
 }

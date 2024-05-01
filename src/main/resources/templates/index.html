@@ -26,26 +26,27 @@
     <title>Users</title>
 </head>
 <body>
-<div class="hstack gap-3 bg-gradient bg-dark-subtle text-light-emphasis">
-    <div class="p-2 bg-gradient">Welcome to admin page,</div>
-    <span class="badge bg-secondary" sec:authentication="name">User</span>
-    <div class="p-2 ms-auto"><span><a role="button" class="nav-link" href="/logout">Logout</a></span></div>
-</div>
+    <div class="hstack gap-3 bg-gradient bg-dark-subtle text-light-emphasis">
+        <div class="p-2 bg-gradient">Welcome,</div>
+            <span class="badge bg-secondary" sec:authentication="name" >User</span>
+            <span class="navbar-text" id="info"></span>
+        <div class="p-2 ms-auto"><span><a role="button" class="nav-link" href="/logout">Logout</a></span></div>
+    </div>
 <div class="row mt-4">
     <div class="col-md-2 m-0 p-0">
         <ul class="nav nav-pills flex-column">
-                <li class="nav-item" >
-                    <a  id="userPageLink" onclick="showUserPage()"
-                        class="nav-link" href="/user">User</a>
-                </li>
-                <li class="nav-item">
-                    <a sec:authorize="hasRole('ROLE_ADMIN')" id="adminPageLink"
-                       onclick="showAdminPage()" th:classappend="${isAdmin} ? active :''"
-                       class="nav-link  active" href="/admin">Admin</a>
-                </li>
+            <li class="nav-item" >
+                <a  id="userPageLink" onclick="showUserPage()"
+                    class="nav-link active" href="#userPageLink">User</a>
+            </li>
+            <li class="nav-item">
+                <a sec:authorize="hasRole('ROLE_ADMIN')" id="adminPageLink"
+                   onclick="showAdminPage()"
+                   class="nav-link" href="#adminPageLink">Admin</a>
+            </li>
         </ul>
     </div>
-    <div id="userMainContent" class="col-md-8 d-none">
+    <div id="userMainContent" class="col-md-8 d-none" style="background-color: rgb(248, 249, 250);">
         <h3 class="pb-4 mb-4  border-bottom">
             User info
         </h3>
@@ -59,18 +60,21 @@
                 <th scope="col">Role</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="userTableContent">
             <tr >
                 <th sec:authentication="principal.id" scope="row">1</th>
                 <td sec:authentication="principal.name" >Name</td>
                 <td sec:authentication="principal.surname">Surname</td>
                 <td sec:authentication="principal.age" >AGE</td>
-                <td sec:authentication="principal.authorities">no Roles</td>
+                <td>no Roles</td>
             </tr>
             </tbody>
         </table>
     </div>
-    <div class="col-md-10" style="background-color: rgb(248, 249, 250);">
+    <div id="adminMainContent" class="col-md-8" style="background-color: rgb(248, 249, 250);">
+        <h3 class="pb-4 mb-4  border-bottom">
+            Admin info
+        </h3>
         <ul class="nav nav-tabs" role="tablist" sec:authorize="hasRole('ROLE_ADMIN')" id="adminPageTabs"> <!--табы-->
             <li class="nav-item" role="presentation"> <!-- первый таб с таблицей всех пользователей -->
                 <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
@@ -87,13 +91,13 @@
         </ul>
 
 
-        <div id="adminMainContent" class="tab-content" > <!-- Таблица пользователей -->
+        <div class="tab-content" > <!-- Таблица пользователей -->
             <div sec:authorize="hasRole('ROLE_ADMIN')"
                  class="tab-pane fade show active" id="home-tab-pane" role="tabpanel"
                  aria-labelledby="home-tab" tabindex="0">
                 <div class="container-fluid">
                     <div class="row">
-                        <div  class="col-md-8">
+                        <div  class="col-md-12">
                             <div class="jumbotron">
                                 <table id="adminPageTable" class="table table-light table-hover table-striped table-sm caption-top">
                                     <caption>Список пользователей</caption>
@@ -159,6 +163,6 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
 </body>
 </html>
