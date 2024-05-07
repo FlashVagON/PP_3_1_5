@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,6 +12,7 @@ import java.util.Collection;
 import java.util.Set;
 
 @Entity
+@RequiredArgsConstructor
 @Table(name = "user")
 public class User implements UserDetails {
 
@@ -36,16 +38,6 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     @NotEmpty(message = "The role cannot be omitted")
     private Set<Role> roles;
-
-    public User(String name, String surname, int age, String password) {
-        this.name = name;
-        this.surname = surname;
-        this.age = age;
-        this.password = password;
-    }
-
-    public User() {
-    }
 
     public Long getId() {
         return id;

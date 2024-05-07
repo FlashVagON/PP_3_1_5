@@ -27,31 +27,36 @@ public class UserRestController {
     public List<User> getUsersList(){
         return userService.listUsers();
     }
+
     @GetMapping("/roleList")
     public List<Role> getRolesList(){
         return roleService.getAllRoles();
     }
+
     @PostMapping("/users")
     public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
         userService.addUser(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
     @PutMapping("/users")
     public ResponseEntity<User> editUser(@Valid @RequestBody User user) {
-        if (userRepository.findById(user.getId()).isEmpty()) {
+        if (userService.showUser(user.getId()) == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         userService.updateUser(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
     @DeleteMapping("/users")
     public ResponseEntity<String> deleteUser(@RequestBody User user) {
-        if (userRepository.findById(user.getId()).isEmpty()) {
+        if (userService.showUser(user.getId()) == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         userService.deleteUser(user);
         return new ResponseEntity<>("User deleted", HttpStatus.OK);
     }
+
     @GetMapping("/user")
     public ResponseEntity<User> getUserByUsername (Principal principal) {
         User user = userRepository.findByName(principal.getName());

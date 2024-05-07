@@ -1,11 +1,13 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@RequiredArgsConstructor
 @Table(name = "role")
 public class Role implements GrantedAuthority {
     @Id
@@ -14,18 +16,6 @@ public class Role implements GrantedAuthority {
     @Transient
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
-
-    public Role() {
-    }
-
-    public Role(Long id) {
-        this.id = id;
-    }
-
-    public Role(Long id, String roleName) {
-        this.id = id;
-        this.roleName = roleName;
-    }
 
     public Long getId() {
         return id;

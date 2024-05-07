@@ -35,15 +35,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().successHandler(successUserHandler)
-//                .loginPage("/login")
-//                .usernameParameter("name")
                 .permitAll()
                 .and()
                 .logout().logoutSuccessUrl("/login")
                 .permitAll();
-
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-
     }
 
     @Autowired
