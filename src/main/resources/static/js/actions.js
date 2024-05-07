@@ -75,7 +75,7 @@ async function getAdminPage() {
     const usersList = document.querySelector('#adminPageTable tbody')
     let result = ''
     console.log("ВЫВОД ОСНОВНОЙ ТАБЛИЦЫ ЮЗЕРОВ")
-    await  fetch('api/userList')
+    await  fetch('api/users')
         .then(res => res.json())
         .then(users => users.forEach(user => {
             console.log(user)
@@ -199,7 +199,7 @@ async function addNewUser(formIdSelector) {
             roles: roles
         }
 
-        fetch('/api/addUser', {
+        fetch('/api/users', {
             credentials: 'include',
             method: 'POST',
             mode: 'cors',
@@ -219,9 +219,9 @@ async function deleteUser(id){
     let data = {
         id: id
     }
-    fetch('/api/deleteUser', {
+    fetch('/api/users', {
         credentials: 'include',
-        method: 'delete',
+        method: 'DELETE',
         mode: 'cors',
         headers: {
             'Accept': 'application/json',
@@ -264,7 +264,7 @@ async function updateUser(formIdSelector) {
 
     }
 
-    fetch('/api/editUser', {
+    fetch('/api/users', {
         credentials: 'include',
         method: 'PUT',
         mode: 'cors',
@@ -273,7 +273,7 @@ async function updateUser(formIdSelector) {
             'Content-Type': 'application/json',
             'X-XSRF-TOKEN': csrfToken
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data, id)
     })
         .then((response) => {
             if (!response.ok) {

@@ -19,11 +19,11 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "name")
-    @Pattern(regexp = "[A-Za-zа-яёА-ЯЁ]{2,15}", message = "Name should be between 2 and 15 characters without space")
+    @Pattern(regexp = "[A-Za-zа-яёА-ЯЁ1-90]{2,15}", message = "Name should be between 2 and 15 characters without space")
     private String name;
 
     @Column(name = "surname")
-    @Pattern(regexp = "[A-Za-zа-яёА-ЯЁ]{2,15}", message = "Surname should be between 2 and 15 characters without space")
+    @Pattern(regexp = "[A-Za-zа-яёА-ЯЁ1-90]{2,15}", message = "Surname should be between 2 and 15 characters without space")
     private String surname;
 
     @Column(name = "age")
